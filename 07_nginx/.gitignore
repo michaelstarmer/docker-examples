@@ -1,0 +1,6 @@
+data/certbot
+data/nginx/log
+data/nginx/app.conf
+data/nginx/upstream.conf
+data/nginx/sites.d/*
+init-letsencrypt.sh

@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  nginx:
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  webserver:
+    image: httpd:2.4
+    ports:
+      - 8080:80
+    volumes:
+      - ./webserver/www/:/usr/local/apache2/htdocs/
+    environment:
+      VIRTUAL_HOST: random.site

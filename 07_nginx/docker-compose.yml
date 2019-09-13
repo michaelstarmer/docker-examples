@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:1.15-alpine
+    network_mode: host
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      #- ./data/nginx:/etc/nginx/conf.d
+      - ./data/nginx/upstream.conf:/etc/nginx/conf.d/0_upstream.conf
+      - ./data/nginx/default.conf:/etc/nginx/conf.d/0_default.conf
+      - ./data/nginx/sites.d/:/etc/nginx/conf.d/
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+      - ./data/nginx/log:/var/log/nginx
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+

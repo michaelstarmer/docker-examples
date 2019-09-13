@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  react-app:
+    build: ./frontend
+    volumes:
+      - ./frontend/src:/app
+    ports:
+      - 3000:3000
+    environment:
+      VIRTUAL_HOST: imedic.docker
